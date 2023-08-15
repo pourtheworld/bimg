@@ -792,13 +792,14 @@ bimg::ImageContainer* convert(bx::AllocatorI* _allocator, const void* _inputData
 
 					bimg::imageGetRawData(*output, side, 0, output->m_data, output->m_size, dstMip);
 					dstData = const_cast<uint8_t*>(dstMip.m_data);
-
+					uint32_t srcMipWidth  = mip.m_width;
+					uint32_t srcMipHeight = mip.m_height;
 					bimg::imageEncodeFromRgba8(
 						  _allocator
 						, dstData
 						, rgba
-						, dstMip.m_width
-						, dstMip.m_height
+						, srcMipWidth
+						, srcMipHeight
 						, dstMip.m_depth
 						, outputFormat
 						, _options.quality
@@ -815,6 +816,9 @@ bimg::ImageContainer* convert(bx::AllocatorI* _allocator, const void* _inputData
 							, bx::strideAlign(dstMip.m_width/2, blockWidth)*4
 							, rgba
 							);
+
+						srcMipWidth  /= 2;
+						srcMipHeight /= 2;
 
 						if (_options.alphaTest)
 						{
@@ -846,8 +850,8 @@ bimg::ImageContainer* convert(bx::AllocatorI* _allocator, const void* _inputData
 							  _allocator
 							, dstData
 							, rgba
-							, dstMip.m_width
-							, dstMip.m_height
+							, srcMipWidth
+							, srcMipHeight
 							, dstMip.m_depth
 							, outputFormat
 							, _options.quality
